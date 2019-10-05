@@ -1,5 +1,7 @@
 package kr.gachon.goopago;
 
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView resultText;
     private TextView resultText2;
     private String result;
+
+    private Button papagoKeep;
+    private Button googleKeep;
+    private Button keepList;
+
+    DBHelper helper = new DBHelper(this);
 
     // 백 그라운드에서 파파고 API와 연결하여 번역 결과를 가져옵니다.
     class BackgroundTask extends AsyncTask<Integer, Integer, Integer> {
@@ -181,12 +189,53 @@ public class MainActivity extends AppCompatActivity {
         resultText = (TextView) findViewById(R.id.resultText);
         resultText2 = (TextView) findViewById(R.id.resultText2);
 
+        papagoKeep = (Button) findViewById(R.id.papagoKeep);
+        googleKeep = (Button) findViewById(R.id.googleKeep);
+        keepList = (Button) findViewById(R.id.keepList);
+
         translationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new BackgroundTask().execute();
                 new GoogleBackgroundTask().execute();
 
+            }
+        });
+
+        //파파고 번역문 저장 버튼
+        papagoKeep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String beforeText = translationText.getText().toString();           // 번역 전 문장을 받아옴
+                String afterText = resultText.getText().toString();                  // 파파고의 번역 후 문장을 받아옴
+
+                SQLiteDatabase db = helper.getWritableDatabase();
+                db.execSQL("insert into sentence (beforeText, afterText) values (?,?)",         // DB의 sentence 테이블에 데이터 입력
+                        new String[]{beforeText, afterText});
+                db.close();
+            }
+        });
+
+        //구글 번역문 저장 버튼
+        googleKeep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String beforeText = translationText.getText().toString();          // 번역 전 문장을 받아옴
+                String afterText = resultText2.getText().toString();               // 구글의 번역 후 문장을 받아옴
+
+                SQLiteDatabase db = helper.getWritableDatabase();
+                db.execSQL("insert into sentence (beforeText, afterText) values (?,?)",       // DB의 sentence 테이블에 데이터 입력
+                        new String[]{beforeText, afterText});
+                db.close();
+            }
+        });
+
+        //저장된 문장 리스트 확인 가능한 버튼
+        keepList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ReadDBActivity.class);
+                startActivity(intent);
             }
         });
 
