@@ -12,7 +12,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String storeSQL = "create table sentence" + "(_id integer primary key autoincrement," +   // 테이블명은 sentence
+        String storeSQL = "create table sentence(_id integer primary key autoincrement," +   // 테이블명은 sentence
                 "beforeText," +                                                                       // 번역 전 문장
                 "afterText)";                                                                         // 번역 후 문장
         db.execSQL(storeSQL);

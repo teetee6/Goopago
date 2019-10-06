@@ -193,6 +193,8 @@ public class MainActivity extends AppCompatActivity {
         googleKeep = (Button) findViewById(R.id.googleKeep);
         keepList = (Button) findViewById(R.id.keepList);
 
+        startActivity(new Intent(this, LoadingActivity.class)); // 앱실행 로딩화면
+
         translationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

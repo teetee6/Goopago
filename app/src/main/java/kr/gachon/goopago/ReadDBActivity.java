@@ -42,15 +42,14 @@ public class ReadDBActivity extends AppCompatActivity {
 
             textview.setText(cursor.getString(0));
             textview2.setText(cursor.getString(1));
+
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    db.execSQL("delete from sentence where afterText =" + "'" + textview2.getText().toString() + "'");
                     deleteBtn.setVisibility(View.GONE);
                     textview.setVisibility(View.GONE);
                     textview2.setVisibility(View.GONE);
-
-                    // db.execSQL("delete from sentence where afterText =" + textview2);
-
                 }
             });
         }

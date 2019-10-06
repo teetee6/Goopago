@@ -36,14 +36,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="번역 결과" />
+        android:layout_margin="15dp"
+        android:textSize="18dp"
+        android:text="번역 결과(파파고)" />
 
     <TextView
         android:id="@+id/resultText2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="번역 결과2" />
+        android:layout_margin="15dp"
+        android:textSize="18dp"
+        android:text="번역 결과(구글)" />
 
     <LinearLayout
         android:layout_width="match_parent"
