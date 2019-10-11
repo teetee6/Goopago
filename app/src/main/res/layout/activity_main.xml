@@ -31,6 +31,13 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
     <TextView
         android:id="@+id/resultText"
         android:layout_width="match_parent"
@@ -39,6 +46,34 @@
         android:layout_margin="15dp"
         android:textSize="18dp"
         android:text="번역 결과(파파고)" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="right">
+
+        <Button
+            android:id="@+id/papagoKeep"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:text="저장"/>
+
+        <Button
+            android:id="@+id/papagoCopy"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:text="복사" />
+    </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
 
     <TextView
         android:id="@+id/resultText2"
@@ -52,22 +87,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <Button
-            android:id="@+id/papagoKeep"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="문장 저장(파파고)" />
+        android:orientation="horizontal"
+        android:gravity="right">
 
         <Button
             android:id="@+id/googleKeep"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="문장 저장(구글)" />
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:text="저장" />
 
+        <Button
+            android:id="@+id/googleCopy"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:text="복사" />
+
+     </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <Button
             android:id="@+id/keepList"
             android:layout_width="match_parent"
@@ -75,4 +116,6 @@
             android:layout_weight="1"
             android:text="저장 목록" />
     </LinearLayout>
+
+
 </LinearLayout>

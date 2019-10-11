@@ -1,5 +1,7 @@
 package kr.gachon.goopago;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -38,7 +41,11 @@ public class MainActivity extends AppCompatActivity {
     private Button googleKeep;
     private Button keepList;
 
+    private Button papagoCopy;
+    private Button googleCopy;
+
     DBHelper helper = new DBHelper(this);
+
 
     // 백 그라운드에서 파파고 API와 연결하여 번역 결과를 가져옵니다.
     class BackgroundTask extends AsyncTask<Integer, Integer, Integer> {
@@ -193,6 +200,9 @@ public class MainActivity extends AppCompatActivity {
         googleKeep = (Button) findViewById(R.id.googleKeep);
         keepList = (Button) findViewById(R.id.keepList);
 
+        papagoCopy = (Button) findViewById(R.id.papagoCopy);
+        googleCopy = (Button) findViewById(R.id.googleCopy);
+
         startActivity(new Intent(this, LoadingActivity.class)); // 앱실행 로딩화면
 
         translationButton.setOnClickListener(new View.OnClickListener() {
@@ -241,5 +251,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // 구글 번역 결과 클립보드에 복사
+        papagoCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("label", resultText.getText().toString());
+                clipboardManager.setPrimaryClip(clipData);
+                Toast.makeText(getApplication(), "클립보드에 복사되었습니다.",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        // 파파고 번역 결과 클립보드에 복사
+        googleCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("label", resultText2.getText().toString());
+                clipboardManager.setPrimaryClip(clipData);
+                Toast.makeText(getApplication(), "클립보드에 복사되었습니다.",Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
