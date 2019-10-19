@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +28,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.annotation.Target;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -45,7 +50,11 @@ public class MainActivity extends AppCompatActivity {
     private Button googleCopy;
 
     DBHelper helper = new DBHelper(this);
+    private Spinner source_spinner;
+    private Spinner target_spinner;
 
+    private String real_s_lang;                   // 어떤 언어로 작성한 문장을
+    private String real_t_lang;                   // 어떤 언어로 번역이 되게 할지... 담는 언어 코드(ex.ko, ja, en) 변수들
 
     // 백 그라운드에서 파파고 API와 연결하여 번역 결과를 가져옵니다.
     class BackgroundTask extends AsyncTask<Integer, Integer, Integer> {
@@ -70,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
                 con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
 
                 // 번역할 문장을 파라미터로 전송합니다.
-                String postParams = "source=ko&target=en&text=" + text;  //queryString형식으로 보낸다.
+                String postParams = "source="+real_s_lang+"&target="+real_t_lang+"&text="+text;              // source_language 와 target_language를 번역이 필요한 text와 같이 보냄
+                // String postParams = "source=ko&target=en&text=" + text;  //queryString형식으로 보낸다.
                 con.setDoOutput(true);   //이 객체(con)의 출력이 가능하게 함.
                 DataOutputStream wr = new DataOutputStream(con.getOutputStream());  //con은 서버가서, 데이터 get해올거임.
                 wr.writeBytes(postParams);  //보낼 데이터
@@ -116,8 +126,8 @@ public class MainActivity extends AppCompatActivity {
     class GoogleBackgroundTask extends AsyncTask<Integer, Integer, Integer> {
         private final static String GoogleApiURL = "https://translation.googleapis.com/language/translate/v2?key=";
         private final static String KEY = "AIzaSyAntVsP46GIoX_EIHeU6CYAqgVHmOgH8fM";
-        private final static String TARGET = "&target=en";
-        private final static String SOURCE = "&source=ko";
+        private String TARGET = "&target="+ real_t_lang;                      // 문장이 real_t_lang 에 들어있는 값으로 번역이 됨
+        private String SOURCE = "&source=" + real_s_lang;                     // 문장이 real_s_lang 에 들어있는 값으로 작성되었음
         private final static String QUERY = "&q=";
 
 
@@ -184,8 +194,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -203,7 +211,98 @@ public class MainActivity extends AppCompatActivity {
         papagoCopy = (Button) findViewById(R.id.papagoCopy);
         googleCopy = (Button) findViewById(R.id.googleCopy);
 
+        source_spinner = (Spinner) findViewById(R.id.source_spinner);
+        target_spinner = (Spinner) findViewById(R.id.target_spinner);
+
         startActivity(new Intent(this, LoadingActivity.class)); // 앱실행 로딩화면
+
+        String[] s_lang = {"한국어","영어","일본어","중국어(간체)","중국어(번체)","베트남어","태국어","독일어","스페인어","이탈리아어","프랑스어"};
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, s_lang);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        source_spinner.setAdapter(adapter);
+
+        source_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String[] t_lang;
+
+                if(parent.getItemAtPosition(position).equals("한국어")) {                                                                                   // 첫 번쨰 스피너에서 한국어가 선택되면
+                    real_s_lang = "ko";                                                                                                                   // 작성될 문장은 한국어(ko) 이고
+                    t_lang = new String[]{"영어","일본어","중국어(간체)","중국어(번체)","베트남어","태국어","독일어","스페인어","이탈리아어","프랑스어"};    // 두 번째 스피너에 한국어에서 번역이 지원되는 언어(en, ja, zh-CH 등)만 뜬다.
+                }else if (parent.getItemAtPosition(position).equals("영어")) {
+                    real_s_lang = "en";
+                    t_lang = new String[]{"한국어","일본어","중국어(간체)","중국어(번체)"};
+                }else if (parent.getItemAtPosition(position).equals("일본어")) {
+                    real_s_lang = "ja";
+                    t_lang = new String[]{"한국어","영어","중국어(간체)","중국어(번체)"};
+                }else if (parent.getItemAtPosition(position).equals("중국어(간체)")) {
+                    real_s_lang = "zh-CN";
+                    t_lang = new String[]{"한국어","영어","일본어","중국어(번체)"};
+                }else if (parent.getItemAtPosition(position).equals("중국어(번체)")) {
+                    real_s_lang = "zh-TW";
+                    t_lang = new String[]{"한국어","영어","일본어","중국어(간체)"};
+                }else if (parent.getItemAtPosition(position).equals("베트남어")) {
+                    real_s_lang = "vi";
+                    t_lang = new String[]{"한국어"};
+                }else if (parent.getItemAtPosition(position).equals("태국어")) {
+                    real_s_lang = "th";
+                    t_lang = new String[]{"한국어"};
+                }else if (parent.getItemAtPosition(position).equals("독일어")) {
+                    real_s_lang = "de";
+                    t_lang = new String[]{"한국어"};
+                }else if (parent.getItemAtPosition(position).equals("스페인어")) {
+                    real_s_lang = "es";
+                    t_lang = new String[]{"한국어"};
+                }else if (parent.getItemAtPosition(position).equals("이탈리아어")) {
+                    real_s_lang = "it";
+                    t_lang = new String[]{"한국어"};
+                }else if (parent.getItemAtPosition(position).equals("프랑스어")) {
+                    real_s_lang = "fr";
+                    t_lang = new String[]{"한국어"};
+                }else
+                    t_lang = new String[]{"한국어"};
+
+                ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, t_lang);
+                adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                target_spinner.setAdapter(adapter2);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        target_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (parent.getItemAtPosition(position).equals("한국어")) {
+                    real_t_lang = "ko";
+                } else if (parent.getItemAtPosition(position).equals("영어")) {
+                    real_t_lang = "en";
+                } else if (parent.getItemAtPosition(position).equals("일본어")) {
+                    real_t_lang = "ja";
+                } else if (parent.getItemAtPosition(position).equals("중국어(간체)")) {
+                    real_t_lang = "zh-CN";
+                } else if (parent.getItemAtPosition(position).equals("중국어(번체)")) {
+                    real_t_lang = "zh-TW";
+                } else if (parent.getItemAtPosition(position).equals("베트남어")) {
+                    real_t_lang = "vi";
+                } else if (parent.getItemAtPosition(position).equals("태국어")) {
+                    real_t_lang = "th";
+                } else if (parent.getItemAtPosition(position).equals("독일어")) {
+                    real_t_lang = "de";
+                } else if (parent.getItemAtPosition(position).equals("스페인어")) {
+                    real_t_lang = "es";
+                } else if (parent.getItemAtPosition(position).equals("이탈리아어")) {
+                    real_t_lang = "it";
+                } else if (parent.getItemAtPosition(position).equals("프랑스어")) {
+                    real_t_lang = "fr";
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         translationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,13 +317,20 @@ public class MainActivity extends AppCompatActivity {
         papagoKeep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String beforeText = translationText.getText().toString();           // 번역 전 문장을 받아옴
-                String afterText = resultText.getText().toString();                  // 파파고의 번역 후 문장을 받아옴
+                if (resultText.getText().toString().equals("")) {
+                    Toast.makeText(MainActivity.this, "저장할 문장이 없습니다", Toast.LENGTH_SHORT).show();
+                } else {
+                    String beforeText = translationText.getText().toString();           // 번역 전 문장을 받아옴
+                    String afterText = resultText.getText().toString();                  // 파파고의 번역 후 문장을 받아옴
+                    String whatapi = "papago";
 
-                SQLiteDatabase db = helper.getWritableDatabase();
-                db.execSQL("insert into sentence (beforeText, afterText) values (?,?)",         // DB의 sentence 테이블에 데이터 입력
-                        new String[]{beforeText, afterText});
-                db.close();
+                    SQLiteDatabase db = helper.getWritableDatabase();
+                    db.execSQL("insert into sentence (beforeText, afterText, whatapi) values (?,?,?)",         // DB의 sentence 테이블에 데이터 입력
+                            new String[]{beforeText, afterText, whatapi});
+                    db.close();
+
+                    Toast.makeText(MainActivity.this, "저장되었습니다", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -232,13 +338,20 @@ public class MainActivity extends AppCompatActivity {
         googleKeep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String beforeText = translationText.getText().toString();          // 번역 전 문장을 받아옴
-                String afterText = resultText2.getText().toString();               // 구글의 번역 후 문장을 받아옴
+                if (resultText2.getText().toString().equals("")) {
+                    Toast.makeText(MainActivity.this, "저장할 문장이 없습니다", Toast.LENGTH_SHORT).show();
+                } else {
+                    String beforeText = translationText.getText().toString();          // 번역 전 문장을 받아옴
+                    String afterText = resultText2.getText().toString();               // 구글의 번역 후 문장을 받아옴
+                    String whatapi = "google";
 
-                SQLiteDatabase db = helper.getWritableDatabase();
-                db.execSQL("insert into sentence (beforeText, afterText) values (?,?)",       // DB의 sentence 테이블에 데이터 입력
-                        new String[]{beforeText, afterText});
-                db.close();
+                    SQLiteDatabase db = helper.getWritableDatabase();
+                    db.execSQL("insert into sentence (beforeText, afterText, whatapi) values (?,?,?)",       // DB의 sentence 테이블에 데이터 입력
+                            new String[]{beforeText, afterText, whatapi});
+                    db.close();
+
+                    Toast.makeText(MainActivity.this, "저장되었습니다", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -273,4 +386,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }

@@ -5,6 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Spinner
+            android:id="@+id/source_spinner"
+            android:layout_width="145dp"
+            android:layout_height="41dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="──▶"
+            android:textStyle="bold"/>
+
+        <Spinner
+            android:id="@+id/target_spinner"
+            android:layout_width="145dp"
+            android:layout_height="41dp" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,97 +41,100 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="번역할 한글"
-            android:inputType="text"/>
+            android:inputType="text" />
 
         <Button
             android:id="@+id/translationButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="번역하기"/>
-
+            android:text="번역하기" />
 
 
     </LinearLayout>
 
+
     <LinearLayout
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/resultText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_margin="15dp"
-        android:textSize="18dp"
-        android:text="번역 결과(파파고)" />
+        <TextView
+            android:id="@+id/resultText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/layout_border"
+            android:hint="번역 결과(파파고)"
+            android:textSize="18dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/papagoKeep"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:text="저장" />
+
+            <Button
+                android:id="@+id/papagoCopy"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:text="복사" />
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="right">
-
-        <Button
-            android:id="@+id/papagoKeep"
-            android:layout_width="70dp"
-            android:layout_height="50dp"
-            android:text="저장"/>
-
-        <Button
-            android:id="@+id/papagoCopy"
-            android:layout_width="70dp"
-            android:layout_height="50dp"
-            android:text="복사" />
-    </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1">
-
-
-    <TextView
-        android:id="@+id/resultText2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_margin="15dp"
-        android:textSize="18dp"
-        android:text="번역 결과(구글)" />
+        android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="right">
 
-        <Button
-            android:id="@+id/googleKeep"
-            android:layout_width="70dp"
-            android:layout_height="50dp"
-            android:text="저장" />
+        <TextView
+            android:id="@+id/resultText2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/layout_border"
+            android:hint="번역 결과(구글)"
+            android:textSize="18dp" />
 
-        <Button
-            android:id="@+id/googleCopy"
-            android:layout_width="70dp"
-            android:layout_height="50dp"
-            android:text="복사" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal">
 
-     </LinearLayout>
+            <Button
+                android:id="@+id/googleKeep"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:text="저장" />
+
+            <Button
+                android:id="@+id/googleCopy"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:text="복사" />
+
+        </LinearLayout>
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Button
             android:id="@+id/keepList"
             android:layout_width="match_parent"
